@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"liturgia/index/funcao"
 	"time"
 
@@ -16,19 +15,24 @@ type Requisicao struct {
 }
 
 func handlerRequest(ctx context.Context, requisicao Requisicao) (events.APIGatewayProxyResponse, error) {
-	fmt.Println(requisicao)
+	// fmt.Println(requisicao)
 	obj := funcao.BuscarLiturgia(requisicao.Data)
 	body, err := json.Marshal(obj)
 	// ctx.
 	// jsonObj := json.end
 	// return jsonObj, nil
 	if err != nil {
-		return events.APIGatewayProxyResponse{}, err
+		return events.APIGatewayProxyResponse{StatusCode: 500, Body: err.Error()}, err
 	}
-	return events.APIGatewayProxyResponse{Body: string(body), StatusCode: 200}, nil
+	return events.APIGatewayProxyResponse{Body: string(body), StatusCode: 200, Headers: map[string]string{"Content-Type": "application/json"}}, nil
 }
 
 func main() {
 	lambda.Start(handlerRequest)
-	// funcao.BuscarLiturgia(time.Now())
+	// dataSel := time.Now()
+	// dataSel, err := time.Parse("2006-01-02", "2021-12-25")
+	// if err != nil {
+	// 	log.Fatal(err.Error())
+	// }
+	// funcao.BuscarLiturgia(dataSel)
 }

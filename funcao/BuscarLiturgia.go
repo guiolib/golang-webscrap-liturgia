@@ -68,7 +68,18 @@ func BuscarLiturgia(dataMissa time.Time) LeituraLiturgia {
 			prefixo = prefixo[strings.Index(prefixo, "- ")+2:]
 			regx := regexp.MustCompile(`Sl\s\d+([()\d]+)?`)
 			prefixo = regx.FindString(prefixo)
-			sufixo = elm.Find(".refrao_salmo").Text()[3:]
+			sufixoEl := elm.Find(".refrao_salmo")
+			fmt.Sprintf(sufixoEl.Text())
+			if sufixoEl.Text() != "" {
+				sufixo = sufixoEl.Text()[3:]
+			} else {
+				sufixoEl = elm.Find(".REFRAO_SALMO")
+				if sufixoEl.Text() != "" {
+					sufixo = sufixoEl.Text()[3:]
+
+				}
+
+			}
 			sufixo = trataString(sufixo)
 		} else {
 			// for {
