@@ -50,7 +50,7 @@ func BuscarLiturgia(dataMissa time.Time) LeituraLiturgia {
 	// fmt.Println(titulo)
 	corObj := trataString(cabecalho.Find("p>em").Text())
 	// fmt.Println(corObj)
-	regexCor := regexp.MustCompile(":\\s?(\\w+)$")
+	regexCor := regexp.MustCompile(`:\s?(\w+)$`)
 	regexCorMatch := regexCor.FindAllStringSubmatch(corObj, 1)
 	// fmt.Println(corObj, regexCorMatch)
 	cor = regexCorMatch[0][1]
@@ -69,7 +69,6 @@ func BuscarLiturgia(dataMissa time.Time) LeituraLiturgia {
 			regx := regexp.MustCompile(`Sl\s\d+([()\d]+)?`)
 			prefixo = regx.FindString(prefixo)
 			sufixoEl := elm.Find(".refrao_salmo")
-			fmt.Sprintf(sufixoEl.Text())
 			if sufixoEl.Text() != "" {
 				sufixo = sufixoEl.Text()[3:]
 			} else {
@@ -86,10 +85,10 @@ func BuscarLiturgia(dataMissa time.Time) LeituraLiturgia {
 			elm.Find("div").Find("div").Each(func(iy int, elmInterno *goquery.Selection) {
 				div := elmInterno
 				// fmt.Println(" -- ", div.Text())
-				if valor := trataString(div.Text()); strings.Index(valor, "Leitura") > -1 {
+				if valor := trataString(div.Text()); strings.Contains(valor, "Leitura") {
 					prefixo = valor
 				}
-				if valor := trataString(div.Text()); prefixo == "" && strings.Index(valor, "Proclama") > -1 {
+				if valor := trataString(div.Text()); prefixo == "" && strings.Contains(valor, "Proclama") {
 					prefixo = valor
 				}
 				rx, err := regexp.Compile(`([\d\W]+\d\w?)+$`)
